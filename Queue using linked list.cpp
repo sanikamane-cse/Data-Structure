@@ -1,102 +1,66 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
-// Node structure
 struct node {
     int data;
-    struct node *next;
+    node* next;
 };
 
-struct node *front = NULL, *rear = NULL;
+node *front = NULL, *rear = NULL;
 
-// Enqueue Operation
 void enqueue() {
-    struct node *newnode;
-    newnode = (struct node*)malloc(sizeof(struct node));
-
-    if (newnode == NULL) {
-        printf("Queue Overflow\n");
-        return;
-    }
-
-    printf("Enter data: ");
-    scanf("%d", &newnode->data);
+    node* newnode = new node;
+    cout << "Enter data: ";
+    cin >> newnode->data;
     newnode->next = NULL;
 
-    if (rear == NULL) {
+    if (rear == NULL)
         front = rear = newnode;
-    } else {
+    else {
         rear->next = newnode;
         rear = newnode;
     }
 }
 
-// Dequeue Operation
 void dequeue() {
-    struct node *temp;
-
     if (front == NULL) {
-        printf("Queue Underflow\n");
-        return;
-    }
-
-    temp = front;
-    printf("Deleted element: %d\n", temp->data);
-    front = front->next;
-
-    if (front == NULL)
-        rear = NULL;
-
-    free(temp);
-}
-
-// Peek Operation
-void peek() {
-    if (front == NULL) {
-        printf("Queue is empty\n");
+        cout << "Underflow\n";
     } else {
-        printf("Front element: %d\n", front->data);
+        node* temp = front;
+        cout << "Deleted: " << temp->data << endl;
+        front = front->next;
+        delete temp;
+        if (front == NULL) rear = NULL;
     }
 }
 
-// Display Operation
+void peek() {
+    if (front == NULL)
+        cout << "Empty\n";
+    else
+        cout << "Front: " << front->data << endl;
+}
+
 void display() {
-    struct node *temp = front;
-
-    if (front == NULL) {
-        printf("Queue is empty\n");
-        return;
-    }
-
-    printf("Queue elements are: ");
+    node* temp = front;
     while (temp != NULL) {
-        printf("%d ", temp->data);
+        cout << temp->data << " ";
         temp = temp->next;
     }
-    printf("\n");
+    cout << endl;
 }
 
-// Main Function
 int main() {
-    int choice;
-
+    int ch;
     while (1) {
-        printf("\n--- Queue using Linked List ---\n");
-        printf("1. Enqueue\n");
-        printf("2. Dequeue\n");
-        printf("3. Peek\n");
-        printf("4. Display\n");
-        printf("5. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
+        cout << "\n1.Enqueue 2.Dequeue 3.Peek 4.Display 5.Exit\n";
+        cin >> ch;
+        switch (ch) {
             case 1: enqueue(); break;
             case 2: dequeue(); break;
             case 3: peek(); break;
             case 4: display(); break;
-            case 5: exit(0);
-            default: printf("Invalid choice\n");
+            case 5: return 0;
         }
     }
 }
