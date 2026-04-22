@@ -1,143 +1,132 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
-// Node structure
 struct node {
     int data;
-    struct node *prev, *next;
+    node *prev, *next;
 };
 
-struct node *head = NULL;
+node* head = NULL;
 
 // Insert at Beginning
 void insert_begin() {
-    struct node *newnode;
-    newnode = (struct node*)malloc(sizeof(struct node));
-    
-    printf("Enter data: ");
-    scanf("%d", &newnode->data);
+    node* n = new node;
+    cout << "Enter data: ";
+    cin >> n->data;
 
-    newnode->prev = NULL;
-    newnode->next = head;
+    n->prev = NULL;
+    n->next = head;
 
     if (head != NULL)
-        head->prev = newnode;
+        head->prev = n;
 
-    head = newnode;
+    head = n;
 }
 
 // Insert at End
 void insert_end() {
-    struct node *newnode, *temp;
-    newnode = (struct node*)malloc(sizeof(struct node));
-    
-    printf("Enter data: ");
-    scanf("%d", &newnode->data);
+    node* n = new node;
+    cout << "Enter data: ";
+    cin >> n->data;
 
-    newnode->next = NULL;
+    n->next = NULL;
 
     if (head == NULL) {
-        newnode->prev = NULL;
-        head = newnode;
+        n->prev = NULL;
+        head = n;
     } else {
-        temp = head;
+        node* temp = head;
         while (temp->next != NULL)
             temp = temp->next;
 
-        temp->next = newnode;
-        newnode->prev = temp;
+        temp->next = n;
+        n->prev = temp;
     }
 }
 
 // Insert at Position
 void insert_pos() {
-    int pos, i = 1;
-    struct node *newnode, *temp = head;
+    int pos;
+    cout << "Enter position: ";
+    cin >> pos;
 
-    printf("Enter position: ");
-    scanf("%d", &pos);
-
-    newnode = (struct node*)malloc(sizeof(struct node));
-    printf("Enter data: ");
-    scanf("%d", &newnode->data);
+    node* n = new node;
+    cout << "Enter data: ";
+    cin >> n->data;
 
     if (pos == 1) {
-        newnode->prev = NULL;
-        newnode->next = head;
+        n->prev = NULL;
+        n->next = head;
         if (head != NULL)
-            head->prev = newnode;
-        head = newnode;
+            head->prev = n;
+        head = n;
         return;
     }
 
-    while (i < pos - 1 && temp != NULL) {
+    node* temp = head;
+    for (int i = 1; i < pos - 1 && temp != NULL; i++)
         temp = temp->next;
-        i++;
-    }
 
     if (temp == NULL) {
-        printf("Invalid position\n");
+        cout << "Invalid position\n";
         return;
     }
 
-    newnode->next = temp->next;
-    newnode->prev = temp;
+    n->next = temp->next;
+    n->prev = temp;
 
     if (temp->next != NULL)
-        temp->next->prev = newnode;
+        temp->next->prev = n;
 
-    temp->next = newnode;
+    temp->next = n;
 }
 
 // Delete from Beginning
 void delete_begin() {
-    struct node *temp;
     if (head == NULL) {
-        printf("List is empty\n");
+        cout << "List empty\n";
         return;
     }
 
-    temp = head;
-    head = head->next;
+    node* temp = head;
+    cout << "Deleted: " << temp->data << endl;
 
+    head = head->next;
     if (head != NULL)
         head->prev = NULL;
 
-    printf("Deleted element: %d\n", temp->data);
-    free(temp);
+    delete temp;
 }
 
 // Delete from End
 void delete_end() {
-    struct node *temp = head;
-
     if (head == NULL) {
-        printf("List is empty\n");
+        cout << "List empty\n";
         return;
     }
 
+    node* temp = head;
     while (temp->next != NULL)
         temp = temp->next;
+
+    cout << "Deleted: " << temp->data << endl;
 
     if (temp->prev != NULL)
         temp->prev->next = NULL;
     else
         head = NULL;
 
-    printf("Deleted element: %d\n", temp->data);
-    free(temp);
+    delete temp;
 }
 
 // Delete from Position
 void delete_pos() {
-    int pos, i = 1;
-    struct node *temp = head;
-
-    printf("Enter position: ");
-    scanf("%d", &pos);
+    int pos;
+    cout << "Enter position: ";
+    cin >> pos;
 
     if (head == NULL) {
-        printf("List is empty\n");
+        cout << "List empty\n";
         return;
     }
 
@@ -146,15 +135,16 @@ void delete_pos() {
         return;
     }
 
-    while (i < pos && temp != NULL) {
+    node* temp = head;
+    for (int i = 1; i < pos && temp != NULL; i++)
         temp = temp->next;
-        i++;
-    }
 
     if (temp == NULL) {
-        printf("Invalid position\n");
+        cout << "Invalid position\n";
         return;
     }
+
+    cout << "Deleted: " << temp->data << endl;
 
     if (temp->next != NULL)
         temp->next->prev = temp->prev;
@@ -162,44 +152,43 @@ void delete_pos() {
     if (temp->prev != NULL)
         temp->prev->next = temp->next;
 
-    printf("Deleted element: %d\n", temp->data);
-    free(temp);
+    delete temp;
 }
 
 // Display Forward
 void display_forward() {
-    struct node *temp = head;
-    if (head == NULL) {
-        printf("List is empty\n");
+    node* temp = head;
+    if (temp == NULL) {
+        cout << "List empty\n";
         return;
     }
 
-    printf("List (Forward): ");
+    cout << "Forward: ";
     while (temp != NULL) {
-        printf("%d ", temp->data);
+        cout << temp->data << " ";
         temp = temp->next;
     }
-    printf("\n");
+    cout << endl;
 }
 
 // Display Backward
 void display_backward() {
-    struct node *temp = head;
+    node* temp = head;
 
-    if (head == NULL) {
-        printf("List is empty\n");
+    if (temp == NULL) {
+        cout << "List empty\n";
         return;
     }
 
     while (temp->next != NULL)
         temp = temp->next;
 
-    printf("List (Backward): ");
+    cout << "Backward: ";
     while (temp != NULL) {
-        printf("%d ", temp->data);
+        cout << temp->data << " ";
         temp = temp->prev;
     }
-    printf("\n");
+    cout << endl;
 }
 
 // Main Function
@@ -207,18 +196,12 @@ int main() {
     int choice;
 
     while (1) {
-        printf("\n--- Doubly Linked List ---\n");
-        printf("1. Insert Begin\n");
-        printf("2. Insert End\n");
-        printf("3. Insert Position\n");
-        printf("4. Delete Begin\n");
-        printf("5. Delete End\n");
-        printf("6. Delete Position\n");
-        printf("7. Display Forward\n");
-        printf("8. Display Backward\n");
-        printf("9. Exit\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        cout << "\n--- Doubly Linked List ---\n";
+        cout << "1.Insert Begin\n2.Insert End\n3.Insert Position\n";
+        cout << "4.Delete Begin\n5.Delete End\n6.Delete Position\n";
+        cout << "7.Display Forward\n8.Display Backward\n9.Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
 
         switch (choice) {
             case 1: insert_begin(); break;
@@ -229,8 +212,8 @@ int main() {
             case 6: delete_pos(); break;
             case 7: display_forward(); break;
             case 8: display_backward(); break;
-            case 9: exit(0);
-            default: printf("Invalid choice\n");
+            case 9: return 0;
+            default: cout << "Invalid choice\n";
         }
     }
 }
